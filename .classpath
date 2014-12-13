@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/phagex"/>
+	<classpathentry kind="lib" path="lib/gltools/gltools-0.1.1a.jar"/>
+	<classpathentry kind="lib" path="lib/gltools/gltools-lwjgl-0.1.1a.jar"/>
+	<classpathentry kind="lib" path="lib/physics/dyn4j-v3.1.8.jar"/>
+	<classpathentry kind="lib" path="lib/physics/jbox2d-library-2.2.1.1-javadoc.jar"/>
+	<classpathentry kind="lib" path="lib/physics/jbox2d-library-2.2.1.1-sources.jar"/>
+	<classpathentry kind="lib" path="lib/physics/jbox2d-library-2.2.1.1.jar"/>
+	<classpathentry kind="lib" path="lib/scripting/js-14.jar"/>
+	<classpathentry kind="lib" path="lib/scripting/js.jar"/>
+	<classpathentry kind="lib" path="lib/scripting/jython-standalone-2.7-b1.jar"/>
+	<classpathentry kind="output" path="bin"/>
+</classpath>
