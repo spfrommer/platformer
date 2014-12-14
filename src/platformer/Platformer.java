@@ -17,9 +17,9 @@ import engine.core.Scene;
 import engine.core.asset.AssetManager;
 import engine.core.asset.AssetType;
 import engine.core.script.XPython;
-import engine.imp.physics.dyn4j.CDyn4jBody;
-import engine.imp.physics.dyn4j.Dyn4jBodySystem;
-import engine.imp.physics.dyn4j.Dyn4jJointSystem;
+import engine.imp.physics.dyn4j.CBody;
+import engine.imp.physics.dyn4j.BodySystem;
+import engine.imp.physics.dyn4j.JointSystem;
 import engine.imp.render.AnimationSystem;
 import engine.imp.render.CCamera;
 import engine.imp.render.CLight;
@@ -68,8 +68,8 @@ public class Platformer {
 	}
 
 	private void addSystems(Game game) {
-		Dyn4jBodySystem bodyPhysics = new Dyn4jBodySystem(new Vector2f(0f, -10f));
-		Dyn4jJointSystem jointPhysics = new Dyn4jJointSystem(bodyPhysics);
+		BodySystem bodyPhysics = new BodySystem(new Vector2f(0f, -10f));
+		JointSystem jointPhysics = new JointSystem(bodyPhysics);
 		AnimationSystem animation = new AnimationSystem();
 		RenderingSystem rendering = new RenderingSystem(5f, 5f);
 		LightingSystem lighting = new LightingSystem(rendering);
@@ -167,7 +167,7 @@ public class Platformer {
 		new Platformer().start();
 	}
 
-	private class GroundPhysicsBuilder implements ComponentBuilder<CDyn4jBody> {
+	private class GroundPhysicsBuilder implements ComponentBuilder<CBody> {
 		private Vector2f m_scale;
 
 		public GroundPhysicsBuilder(Vector2f scale) {
@@ -175,8 +175,8 @@ public class Platformer {
 		}
 
 		@Override
-		public CDyn4jBody build() {
-			CDyn4jBody physics = new CDyn4jBody();
+		public CBody build() {
+			CBody physics = new CBody();
 			physics.setShape(new Rectangle(m_scale.getX(), m_scale.getY()));
 			physics.setGravityScale(0);
 			physics.setMassType(Type.INFINITE);
@@ -185,11 +185,11 @@ public class Platformer {
 
 		@Override
 		public String getName() {
-			return CDyn4jBody.NAME;
+			return CBody.NAME;
 		}
 	}
 
-	private class PlayerPhysicsBuilder implements ComponentBuilder<CDyn4jBody> {
+	private class PlayerPhysicsBuilder implements ComponentBuilder<CBody> {
 		private Vector2f m_scale;
 
 		public PlayerPhysicsBuilder(Vector2f scale) {
@@ -197,8 +197,8 @@ public class Platformer {
 		}
 
 		@Override
-		public CDyn4jBody build() {
-			CDyn4jBody physics = new CDyn4jBody();
+		public CBody build() {
+			CBody physics = new CBody();
 			physics.setShape(new Rectangle(m_scale.getX(), m_scale.getY()));
 			physics.setGravityScale(1);
 			physics.setMassType(Type.FIXED_ANGULAR_VELOCITY);
@@ -209,7 +209,7 @@ public class Platformer {
 
 		@Override
 		public String getName() {
-			return CDyn4jBody.NAME;
+			return CBody.NAME;
 		}
 	}
 }

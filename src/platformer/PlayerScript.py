@@ -1,7 +1,7 @@
 from engine.core import CTransform
 from engine.core import EntityBuilder
 from engine.core import ComponentBuilder
-from engine.imp.physics.dyn4j import CDyn4jBody
+from engine.imp.physics.dyn4j import CBody
 from commons import Transform2f
 from engine.imp.render import CRender
 from commons.matrix import Vector2f
@@ -20,13 +20,13 @@ class IciclePhysics(ComponentBuilder):
 		self.m_angle = angle
 		
 	def build(self):
-		physics = CDyn4jBody();
+		physics = CBody();
 		physics.setShape(Rectangle(icicleWidth, icicleHeight))
 		physics.setVelocity(Vector2f(self.m_angle).setLength(5))
 		return physics
 		
 	def getName(self):
-		return CDyn4jBody.NAME
+		return CBody.NAME
 
 lastJump = 0
 jumpTimeout = 1000
@@ -48,14 +48,14 @@ def handleJump(time) :
 	global lastJump
 	lastJump += time
 	if keyboard.isKeyPressed(keyboard.getKey("W")) :
-		if lastJump >= jumpTimeout and dyn4jBody.getVelocity().length() < 0.01 :
-			dyn4jBody.applyForce(Vector2f(0, 15))
+		if lastJump >= jumpTimeout and body.getVelocity().length() < 0.01 :
+			body.applyForce(Vector2f(0, 15))
 			lastJump = 0
 
 def handleJetpack(time) :
 	gameMouse = mouse.getMouse()
 	if gameMouse.isButtonDown(gameMouse.getButton(MouseButton.RIGHT_BUTTON_NAME)) :
-		dyn4jBody.applyForce(Vector2f(0, 0.5))
+		body.applyForce(Vector2f(0, 0.5))
 
 def handleIcicle(time) :
 	global lastIcicle
