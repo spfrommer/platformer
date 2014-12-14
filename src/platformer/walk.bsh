@@ -1,0 +1,15 @@
+import commons.matrix.Vector2f;
+
+void update(float time) {
+	handleWalk(time);
+}
+void handleWalk(float time) {
+	if (keyboard.isKeyPressed(keyboard.getKey("D"))) {
+		Vector2f v = dyn4jBody.getVelocity();
+		dyn4jBody.setVelocity(new Vector2f(v.getX() + 0.1f, v.getY()));
+	}
+	if (keyboard.isKeyPressed(keyboard.getKey("A"))) {
+		Vector2f v = dyn4jBody.getVelocity();
+		dyn4jBody.setVelocity(new Vector2f(v.getX() - 0.1f, v.getY()));
+	}
+}

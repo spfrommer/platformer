@@ -48,7 +48,7 @@ def handleJump(time) :
 	global lastJump
 	lastJump += time
 	if keyboard.isKeyPressed(keyboard.getKey("W")) :
-		if lastJump >= jumpTimeout and dyn4jBody.getVelocity().length() < 0.01 :
+		if lastJump >= jumpTimeout and dyn4jBody.getVelocity().getY() < 0.1 :
 			dyn4jBody.applyForce(Vector2f(0, 15))
 			lastJump = 0
 
@@ -76,8 +76,3 @@ def update(time):
 	handleJump(time)
 	handleJetpack(time)
 	handleIcicle(time)
-	
-	if keyboard.isKeyPressed(keyboard.getKey("D")) :
-		transform.translate(0.03, 0)
-	if keyboard.isKeyPressed(keyboard.getKey("A")) :
-		transform.translate(-0.03, 0)
