@@ -4,6 +4,7 @@ import org.dyn4j.geometry.Mass.Type;
 import org.dyn4j.geometry.Rectangle;
 
 import commons.Resource;
+import commons.ResourceFactory;
 import commons.ResourceLocator.ClasspathResourceLocator;
 import commons.Transform2f;
 import commons.matrix.Vector2f;
@@ -33,8 +34,6 @@ import glextra.material.Material;
 public class Platformer {
 	private MaterialFactory m_factory;
 
-	private Resource m_playerScript;
-
 	public Platformer() {
 
 	}
@@ -49,13 +48,12 @@ public class Platformer {
 		game.scenes().addScene(scene, "main");
 
 		EntityBuilder lightBuilder = new EntityBuilder();
-		/*lightBuilder.addComponentBuilder(new CLight(LightFactory.createDiffusePoint(new Vector3f(0f, 0f, 1f),
-				new Vector3f(0.5f, 0.5f, 0.5f), new Color(0.7f, 0.7f, 1f))));*/
 		lightBuilder.addComponentBuilder(new CLight(LightFactory.createAmbient(new Color(0.7f, 0.7f, 1f))));
 		scene.createEntity("light", scene, lightBuilder);
 
 		makeBackground(scene);
 		makePlatforms(scene);
+		makeSpawner(scene);
 		Entity player = makePlayer(scene);
 
 		EntityBuilder cameraBuilder = new EntityBuilder();
@@ -85,24 +83,29 @@ public class Platformer {
 	}
 
 	private void initResources() {
-
 		ClasspathResourceLocator locator = new ClasspathResourceLocator();
-		m_playerScript = new Resource(locator, "platformer/PlayerScript.py");
-		Resource rBackground = new Resource(locator, "platformer/background.png");
-		Resource rIcicle = new Resource(locator, "platformer/cave_icicle_1_0.png");
-		Resource rLake = new Resource(locator, "platformer/cave_lake_1_0.png");
-		Resource rPlatform1 = new Resource(locator, "platformer/cave_platform_1_0.png");
-		Resource rPlatform4 = new Resource(locator, "platformer/cave_platform_4_0.png");
-		Resource rSnowflake = new Resource(locator, "platformer/snowflake.png");
+		Resource playerScript = new Resource(locator, "platformer/PlayerScript.py");
+		Resource snowflakeScript = new Resource(locator, "platformer/SnowflakeScript.py");
+		Resource spawnScript = new Resource(locator, "platformer/SpawnScript.py");
+		Resource background = new Resource(locator, "platformer/background.png");
+		Resource icicle = new Resource(locator, "platformer/cave_icicle_1_0.png");
+		Resource lake = new Resource(locator, "platformer/cave_lake_1_0.png");
+		Resource platform1 = new Resource(locator, "platformer/cave_platform_1_0.png");
+		Resource platform4 = new Resource(locator, "platformer/cave_platform_4_0.png");
+		Resource snowflake = new Resource(locator, "platformer/snowflake.png");
 
 		AssetManager assets = AssetManager.instance();
 
-		assets.defineAsset("background", AssetType.MATERIAL, rBackground, m_factory.createLighted(rBackground));
-		assets.defineAsset("icicle", AssetType.MATERIAL, rIcicle, m_factory.createLighted(rIcicle));
-		assets.defineAsset("lake", AssetType.MATERIAL, rLake, m_factory.createLighted(rLake));
-		assets.defineAsset("platform1", AssetType.MATERIAL, rPlatform1, m_factory.createLighted(rPlatform1));
-		assets.defineAsset("platform4", AssetType.MATERIAL, rPlatform4, m_factory.createLighted(rPlatform4));
-		assets.defineAsset("snowflake", AssetType.MATERIAL, rSnowflake, m_factory.createLighted(rSnowflake));
+		assets.defineAsset("player_script", AssetType.SCRIPT, playerScript, ResourceFactory.readString(playerScript));
+		assets.defineAsset("snowflake_script", AssetType.SCRIPT, snowflakeScript,
+				ResourceFactory.readString(snowflakeScript));
+		assets.defineAsset("spawn_script", AssetType.SCRIPT, spawnScript, ResourceFactory.readString(spawnScript));
+		assets.defineAsset("background", AssetType.MATERIAL, background, m_factory.createLighted(background));
+		assets.defineAsset("icicle", AssetType.MATERIAL, icicle, m_factory.createLighted(icicle));
+		assets.defineAsset("lake", AssetType.MATERIAL, lake, m_factory.createLighted(lake));
+		assets.defineAsset("platform1", AssetType.MATERIAL, platform1, m_factory.createLighted(platform1));
+		assets.defineAsset("platform4", AssetType.MATERIAL, platform4, m_factory.createLighted(platform4));
+		assets.defineAsset("snowflake", AssetType.MATERIAL, snowflake, m_factory.createLighted(snowflake));
 	}
 
 	private void makeBackground(Scene scene) {
@@ -128,6 +131,14 @@ public class Platformer {
 		makePlatform(scene, p1Builder, 2, new Vector2f(3f, 1.5f), new Vector2f(1f, 2f));
 	}
 
+	private void makeSpawner(Scene scene) {
+		AssetManager assets = AssetManager.instance();
+		String script = (String) assets.getAsset("spawn_script").getAsset();
+
+		Entity spawner = scene.createEntity("snowflakespawner", scene);
+		spawner.scripts().add(new XPython(script));
+	}
+
 	private void makePlatform(Scene scene, EntityBuilder builder, int num, Vector2f position, Vector2f scale) {
 		Entity platform = scene.createEntity("platform" + num, scene, builder);
 		platform.getCTransform().setTransform(new Transform2f(position, 0f, scale));
@@ -136,6 +147,7 @@ public class Platformer {
 	private Entity makePlayer(Scene scene) {
 		AssetManager assets = AssetManager.instance();
 		Material icicle = (Material) assets.getAsset("icicle").getAsset();
+		String script = (String) assets.getAsset("player_script").getAsset();
 
 		Vector2f playerScale = new Vector2f(0.5f, 1f);
 		EntityBuilder builder = new EntityBuilder();
@@ -143,7 +155,7 @@ public class Platformer {
 		builder.addComponentBuilder(new PlayerPhysicsBuilder(playerScale));
 		Entity player = scene.createEntity("player", scene, builder);
 		player.getCTransform().setTransform(new Transform2f(new Vector2f(0f, 2f), 0f, playerScale));
-		player.scripts().add(new XPython(m_playerScript));
+		player.scripts().add(new XPython(script));
 		return player;
 	}
 
