@@ -87,6 +87,7 @@ public class Platformer {
 		Resource playerScript = new Resource(locator, "platformer/PlayerScript.py");
 		Resource snowflakeScript = new Resource(locator, "platformer/SnowflakeScript.py");
 		Resource spawnScript = new Resource(locator, "platformer/SpawnScript.py");
+		Resource icicleScript = new Resource(locator, "platformer/IcicleScript.py");
 		Resource background = new Resource(locator, "platformer/background.png");
 		Resource icicle = new Resource(locator, "platformer/cave_icicle_1_0.png");
 		Resource lake = new Resource(locator, "platformer/cave_lake_1_0.png");
@@ -100,6 +101,7 @@ public class Platformer {
 		assets.defineAsset("snowflake_script", AssetType.SCRIPT, snowflakeScript,
 				ResourceFactory.readString(snowflakeScript));
 		assets.defineAsset("spawn_script", AssetType.SCRIPT, spawnScript, ResourceFactory.readString(spawnScript));
+		assets.defineAsset("icicle_script", AssetType.SCRIPT, icicleScript, ResourceFactory.readString(icicleScript));
 		assets.defineAsset("background", AssetType.MATERIAL, background, m_factory.createLighted(background));
 		assets.defineAsset("icicle", AssetType.MATERIAL, icicle, m_factory.createLighted(icicle));
 		assets.defineAsset("lake", AssetType.MATERIAL, lake, m_factory.createLighted(lake));
