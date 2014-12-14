@@ -76,8 +76,3 @@ def update(time):
 	handleJump(time)
 	handleJetpack(time)
 	handleIcicle(time)
-	
-	if keyboard.isKeyPressed(keyboard.getKey("D")) :
-		transform.translate(0.03, 0)
-	if keyboard.isKeyPressed(keyboard.getKey("A")) :
-		transform.translate(-0.03, 0)

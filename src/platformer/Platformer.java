@@ -8,7 +8,6 @@ import commons.ResourceFactory;
 import commons.ResourceLocator.ClasspathResourceLocator;
 import commons.Transform2f;
 import commons.matrix.Vector2f;
-
 import engine.core.ComponentBuilder;
 import engine.core.Entity;
 import engine.core.EntityBuilder;
@@ -16,6 +15,7 @@ import engine.core.Game;
 import engine.core.Scene;
 import engine.core.asset.AssetManager;
 import engine.core.asset.AssetType;
+import engine.core.script.XJava;
 import engine.core.script.XPython;
 import engine.imp.physics.dyn4j.CBody;
 import engine.imp.physics.dyn4j.BodySystem;
@@ -88,6 +88,7 @@ public class Platformer {
 		Resource snowflakeScript = new Resource(locator, "platformer/SnowflakeScript.py");
 		Resource spawnScript = new Resource(locator, "platformer/SpawnScript.py");
 		Resource icicleScript = new Resource(locator, "platformer/IcicleScript.py");
+		Resource walkScript = new Resource(locator, "platformer/walk.bsh");
 		Resource background = new Resource(locator, "platformer/background.png");
 		Resource snowman = new Resource(locator, "platformer/snowman.png");
 		Resource icicle = new Resource(locator, "platformer/cave_icicle_1_0.png");
@@ -103,6 +104,7 @@ public class Platformer {
 				ResourceFactory.readString(snowflakeScript));
 		assets.defineAsset("spawn_script", AssetType.SCRIPT, spawnScript, ResourceFactory.readString(spawnScript));
 		assets.defineAsset("icicle_script", AssetType.SCRIPT, icicleScript, ResourceFactory.readString(icicleScript));
+		assets.defineAsset("walk_script", AssetType.SCRIPT, walkScript, ResourceFactory.readString(walkScript));
 		assets.defineAsset("background", AssetType.MATERIAL, background, m_factory.createLighted(background));
 		assets.defineAsset("snowman", AssetType.MATERIAL, snowman, m_factory.createLighted(snowman));
 		assets.defineAsset("icicle", AssetType.MATERIAL, icicle, m_factory.createLighted(icicle));
@@ -152,6 +154,7 @@ public class Platformer {
 		AssetManager assets = AssetManager.instance();
 		Material icicle = (Material) assets.getAsset("snowman").getAsset();
 		String script = (String) assets.getAsset("player_script").getAsset();
+		String testScript = (String) assets.getAsset("walk_script").getAsset();
 
 		Vector2f playerScale = new Vector2f(0.5f, 1f);
 		EntityBuilder builder = new EntityBuilder();
@@ -160,6 +163,7 @@ public class Platformer {
 		Entity player = scene.createEntity("player", scene, builder);
 		player.getCTransform().setTransform(new Transform2f(new Vector2f(0f, 2f), 0f, playerScale));
 		player.scripts().add(new XPython(script));
+		player.scripts().add(new XJava(testScript));
 		return player;
 	}
 
@@ -178,6 +182,7 @@ public class Platformer {
 		public CBody build() {
 			CBody physics = new CBody();
 			physics.setShape(new Rectangle(m_scale.getX(), m_scale.getY()));
+			physics.setCollisionFriction(0.001f);
 			physics.setGravityScale(0);
 			physics.setMassType(Type.INFINITE);
 			return physics;
