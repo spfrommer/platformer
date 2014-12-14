@@ -59,7 +59,7 @@ public class Platformer {
 		EntityBuilder cameraBuilder = new EntityBuilder();
 		cameraBuilder.addComponentBuilder(new CCamera(1f, true));
 		scene.createEntity("camera", player, cameraBuilder);
-
+		
 		game.start();
 
 		while (true) {
@@ -89,6 +89,7 @@ public class Platformer {
 		Resource spawnScript = new Resource(locator, "platformer/SpawnScript.py");
 		Resource icicleScript = new Resource(locator, "platformer/IcicleScript.py");
 		Resource background = new Resource(locator, "platformer/background.png");
+		Resource snowman = new Resource(locator, "platformer/snowman.png");
 		Resource icicle = new Resource(locator, "platformer/cave_icicle_1_0.png");
 		Resource lake = new Resource(locator, "platformer/cave_lake_1_0.png");
 		Resource platform1 = new Resource(locator, "platformer/cave_platform_1_0.png");
@@ -103,6 +104,7 @@ public class Platformer {
 		assets.defineAsset("spawn_script", AssetType.SCRIPT, spawnScript, ResourceFactory.readString(spawnScript));
 		assets.defineAsset("icicle_script", AssetType.SCRIPT, icicleScript, ResourceFactory.readString(icicleScript));
 		assets.defineAsset("background", AssetType.MATERIAL, background, m_factory.createLighted(background));
+		assets.defineAsset("snowman", AssetType.MATERIAL, snowman, m_factory.createLighted(snowman));
 		assets.defineAsset("icicle", AssetType.MATERIAL, icicle, m_factory.createLighted(icicle));
 		assets.defineAsset("lake", AssetType.MATERIAL, lake, m_factory.createLighted(lake));
 		assets.defineAsset("platform1", AssetType.MATERIAL, platform1, m_factory.createLighted(platform1));
@@ -148,7 +150,7 @@ public class Platformer {
 
 	private Entity makePlayer(Scene scene) {
 		AssetManager assets = AssetManager.instance();
-		Material icicle = (Material) assets.getAsset("icicle").getAsset();
+		Material icicle = (Material) assets.getAsset("snowman").getAsset();
 		String script = (String) assets.getAsset("player_script").getAsset();
 
 		Vector2f playerScale = new Vector2f(0.5f, 1f);

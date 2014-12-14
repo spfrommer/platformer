@@ -52,6 +52,11 @@ def handleJump(time) :
 			dyn4jBody.applyForce(Vector2f(0, 15))
 			lastJump = 0
 
+def handleJetpack(time) :
+	gameMouse = mouse.getMouse()
+	if gameMouse.isButtonDown(gameMouse.getButton(MouseButton.RIGHT_BUTTON_NAME)) :
+		dyn4jBody.applyForce(Vector2f(0, 0.5))
+
 def handleIcicle(time) :
 	global lastIcicle
 	global icicleCount
@@ -69,7 +74,9 @@ def handleIcicle(time) :
 
 def update(time):
 	handleJump(time)
+	handleJetpack(time)
 	handleIcicle(time)
+	
 	if keyboard.isKeyPressed(keyboard.getKey("D")) :
 		transform.translate(0.03, 0)
 	if keyboard.isKeyPressed(keyboard.getKey("A")) :
