@@ -6,10 +6,10 @@ void update(float time) {
 void handleWalk(float time) {
 	if (keyboard.isKeyPressed(keyboard.getKey("D"))) {
 		Vector2f v = body.getVelocity();
-		body.setVelocity(new Vector2f(v.getX() + 0.1f, v.getY()));
+		body.setVelocityX(v.getX() + 0.1f);
 	}
 	if (keyboard.isKeyPressed(keyboard.getKey("A"))) {
 		Vector2f v = body.getVelocity();
-		body.setVelocity(new Vector2f(v.getX() - 0.1f, v.getY()));
+		body.setVelocityX(v.getX() - 0.1f);
 	}
 }
