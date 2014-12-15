@@ -8,6 +8,7 @@ import commons.ResourceFactory;
 import commons.ResourceLocator.ClasspathResourceLocator;
 import commons.Transform2f;
 import commons.matrix.Vector2f;
+
 import engine.core.ComponentBuilder;
 import engine.core.Entity;
 import engine.core.EntityBuilder;
@@ -17,8 +18,8 @@ import engine.core.asset.AssetManager;
 import engine.core.asset.AssetType;
 import engine.core.script.XJava;
 import engine.core.script.XPython;
-import engine.imp.physics.dyn4j.CBody;
 import engine.imp.physics.dyn4j.BodySystem;
+import engine.imp.physics.dyn4j.CBody;
 import engine.imp.physics.dyn4j.JointSystem;
 import engine.imp.render.AnimationSystem;
 import engine.imp.render.CCamera;
@@ -59,11 +60,15 @@ public class Platformer {
 		EntityBuilder cameraBuilder = new EntityBuilder();
 		cameraBuilder.addComponentBuilder(new CCamera(1f, true));
 		scene.createEntity("camera", player, cameraBuilder);
-		
+
 		game.start();
 
+		float lastTime = 16f;
 		while (true) {
-			game.update(16f);
+			long startTime = System.nanoTime();
+			game.update(lastTime);
+			long endTime = System.nanoTime();
+			lastTime = (endTime - startTime) / 1000000;
 		}
 	}
 
