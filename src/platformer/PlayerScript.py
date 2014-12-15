@@ -48,14 +48,9 @@ def handleJump(time) :
 	global lastJump
 	lastJump += time
 	if keyboard.isKeyPressed(keyboard.getKey("W")) :
-		if lastJump >= jumpTimeout and body.getVelocity().length() < 0.01 :
+		if lastJump >= jumpTimeout and body.getVelocity().getY() < 0.01 :
 			body.applyForce(Vector2f(0, 15))
 			lastJump = 0
-
-def handleJetpack(time) :
-	gameMouse = mouse.getMouse()
-	if gameMouse.isButtonDown(gameMouse.getButton(MouseButton.RIGHT_BUTTON_NAME)) :
-		body.applyForce(Vector2f(0, 0.5))
 
 def handleIcicle(time) :
 	global lastIcicle
@@ -71,8 +66,8 @@ def handleIcicle(time) :
 			icicle.getCTransform().setTransform(Transform2f(translation.add(mouseVector.setLength(1)).toVector2f(), mouseVector.angle(), Vector2f(icicleWidth, icicleHeight)))
 			lastIcicle = 0
 			icicleCount += 1
+			body.applyForce(mouseVector.setLength(-5))
 
 def update(time):
 	handleJump(time)
-	handleJetpack(time)
 	handleIcicle(time)

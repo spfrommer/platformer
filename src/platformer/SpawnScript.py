@@ -7,7 +7,7 @@ import random
 
 snowflakeImage = assets.getAsset("snowflake").getAsset()
 snowflakeBuilder = EntityBuilder()
-snowflakeBuilder.addComponentBuilder(CRender(snowflakeImage, 1, 1))
+snowflakeBuilder.addComponentBuilder(CRender(snowflakeImage, 2, 0.5))
 
 snowflakeScript = XPython(assets.getAsset("snowflake_script").getAsset())
 snowflakeBuilder.addScript(snowflakeScript)
@@ -25,6 +25,6 @@ def update(time) :
     gameMouse = mouse.getMouse()
     if lastSnowflake >= snowflakeTimeout :
         snowflake = scene.createEntity("snowflake" + str(snowflakeCount), scene, snowflakeBuilder)
-        snowflake.getCTransform().setTransform(Transform2f(Vector2f(random.uniform(-spawnWidth, spawnWidth), spawnHeight), 0, Vector2f(0.5, 0.5)))
+        snowflake.getCTransform().setTransform(Transform2f(Vector2f(random.uniform(-spawnWidth, spawnWidth), spawnHeight), 0, Vector2f(0.25, 0.25)))
         lastSnowflake = 0
         snowflakeCount += 1
