@@ -4,7 +4,6 @@ import org.dyn4j.geometry.Mass.Type;
 import org.dyn4j.geometry.Rectangle;
 
 import commons.Resource;
-import commons.ResourceFactory;
 import commons.ResourceLocator.ClasspathResourceLocator;
 import commons.Transform2f;
 import commons.matrix.Vector2f;
@@ -15,9 +14,9 @@ import engine.core.EntityBuilder;
 import engine.core.Game;
 import engine.core.Scene;
 import engine.core.asset.AssetManager;
-import engine.core.asset.AssetType;
 import engine.core.script.XJava;
 import engine.core.script.XPython;
+import engine.core.script.XScript;
 import engine.imp.physics.dyn4j.BodySystem;
 import engine.imp.physics.dyn4j.CBody;
 import engine.imp.physics.dyn4j.JointSystem;
@@ -27,14 +26,11 @@ import engine.imp.render.CLight;
 import engine.imp.render.CRender;
 import engine.imp.render.LightFactory;
 import engine.imp.render.LightingSystem;
-import engine.imp.render.MaterialFactory;
+import engine.imp.render.Material2D;
 import engine.imp.render.RenderingSystem;
 import glcommon.Color;
-import glextra.material.Material;
 
 public class Platformer {
-	private MaterialFactory m_factory;
-
 	public Platformer() {
 
 	}
@@ -84,10 +80,12 @@ public class Platformer {
 		game.addSystem(rendering);
 		game.addSystem(lighting);
 
-		m_factory = new MaterialFactory(rendering);
+		AssetManager.init(rendering.getDisplay().getGL());
 	}
 
 	private void initResources() {
+		AssetManager manager = AssetManager.instance();
+
 		ClasspathResourceLocator locator = new ClasspathResourceLocator();
 		Resource playerScript = new Resource(locator, "platformer/PlayerScript.py");
 		Resource snowflakeScript = new Resource(locator, "platformer/SnowflakeScript.py");
@@ -102,26 +100,23 @@ public class Platformer {
 		Resource platform4 = new Resource(locator, "platformer/cave_platform_4_0.png");
 		Resource snowflake = new Resource(locator, "platformer/snowflake.png");
 
-		AssetManager assets = AssetManager.instance();
-
-		assets.defineAsset("player_script", AssetType.SCRIPT, playerScript, ResourceFactory.readString(playerScript));
-		assets.defineAsset("snowflake_script", AssetType.SCRIPT, snowflakeScript,
-				ResourceFactory.readString(snowflakeScript));
-		assets.defineAsset("spawn_script", AssetType.SCRIPT, spawnScript, ResourceFactory.readString(spawnScript));
-		assets.defineAsset("icicle_script", AssetType.SCRIPT, icicleScript, ResourceFactory.readString(icicleScript));
-		assets.defineAsset("walk_script", AssetType.SCRIPT, walkScript, ResourceFactory.readString(walkScript));
-		assets.defineAsset("background", AssetType.MATERIAL, background, m_factory.createLighted(background));
-		assets.defineAsset("snowman", AssetType.MATERIAL, snowman, m_factory.createLighted(snowman));
-		assets.defineAsset("icicle", AssetType.MATERIAL, icicle, m_factory.createLighted(icicle));
-		assets.defineAsset("lake", AssetType.MATERIAL, lake, m_factory.createLighted(lake));
-		assets.defineAsset("platform1", AssetType.MATERIAL, platform1, m_factory.createLighted(platform1));
-		assets.defineAsset("platform4", AssetType.MATERIAL, platform4, m_factory.createLighted(platform4));
-		assets.defineAsset("snowflake", AssetType.MATERIAL, snowflake, m_factory.createLighted(snowflake));
+		manager.load("player_script", playerScript, XPython.class);
+		manager.load("snowflake_script", snowflakeScript, XPython.class);
+		manager.load("spawn_script", spawnScript, XPython.class);
+		manager.load("icicle_script", icicleScript, XPython.class);
+		manager.load("walk_script", walkScript, XJava.class);
+		manager.load("background", background, Material2D.class);
+		manager.load("snowman", snowman, Material2D.class);
+		manager.load("icicle", icicle, Material2D.class);
+		manager.load("lake", lake, Material2D.class);
+		manager.load("platform1", platform1, Material2D.class);
+		manager.load("platform4", platform4, Material2D.class);
+		manager.load("snowflake", snowflake, Material2D.class);
 	}
 
 	private void makeBackground(Scene scene) {
 		AssetManager assets = AssetManager.instance();
-		Material backgroundImage = (Material) assets.getAsset("background").getAsset();
+		Material2D backgroundImage = assets.get("background", Material2D.class);
 
 		EntityBuilder background = new EntityBuilder();
 		background.addComponentBuilder(new CRender(backgroundImage, 0, 2f));
@@ -131,7 +126,7 @@ public class Platformer {
 
 	private void makePlatforms(Scene scene) {
 		AssetManager assets = AssetManager.instance();
-		Material platform1 = (Material) assets.getAsset("platform1").getAsset();
+		Material2D platform1 = assets.get("platform1", Material2D.class);
 
 		Vector2f p1Scale = new Vector2f(1f, 2f);
 		EntityBuilder p1Builder = new EntityBuilder();
@@ -144,10 +139,10 @@ public class Platformer {
 
 	private void makeSpawner(Scene scene) {
 		AssetManager assets = AssetManager.instance();
-		String script = (String) assets.getAsset("spawn_script").getAsset();
+		XScript script = assets.get("spawn_script", XPython.class);
 
 		Entity spawner = scene.createEntity("snowflakespawner", scene);
-		spawner.scripts().add(new XPython(script));
+		spawner.scripts().add(script.duplicate());
 	}
 
 	private void makePlatform(Scene scene, EntityBuilder builder, int num, Vector2f position, Vector2f scale) {
@@ -157,18 +152,18 @@ public class Platformer {
 
 	private Entity makePlayer(Scene scene) {
 		AssetManager assets = AssetManager.instance();
-		Material icicle = (Material) assets.getAsset("snowman").getAsset();
-		String script = (String) assets.getAsset("player_script").getAsset();
-		String testScript = (String) assets.getAsset("walk_script").getAsset();
+		Material2D snowman = assets.get("snowman", Material2D.class);
+		XScript playerScript = assets.get("player_script", XPython.class);
+		XScript moveScript = assets.get("walk_script", XJava.class);
 
 		Vector2f playerScale = new Vector2f(0.5f, 1f);
-		EntityBuilder builder = new EntityBuilder();
-		builder.addComponentBuilder(new CRender(icicle, 1, 1f));
-		builder.addComponentBuilder(new PlayerPhysicsBuilder(playerScale));
-		Entity player = scene.createEntity("player", scene, builder);
+		EntityBuilder playerBuilder = new EntityBuilder();
+		playerBuilder.addComponentBuilder(new CRender(snowman, 1, 1f));
+		playerBuilder.addComponentBuilder(new PlayerPhysicsBuilder(playerScale));
+		playerBuilder.addScript(playerScript);
+		playerBuilder.addScript(moveScript);
+		Entity player = scene.createEntity("player", scene, playerBuilder);
 		player.getCTransform().setTransform(new Transform2f(new Vector2f(0f, 2f), 0f, playerScale));
-		player.scripts().add(new XPython(script));
-		player.scripts().add(new XJava(testScript));
 		return player;
 	}
 

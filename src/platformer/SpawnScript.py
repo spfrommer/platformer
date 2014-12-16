@@ -5,11 +5,11 @@ from commons.matrix import Vector2f
 from engine.core.script import XPython
 import random
 
-snowflakeImage = assets.getAsset("snowflake").getAsset()
+snowflakeImage = assets.get("snowflake")
 snowflakeBuilder = EntityBuilder()
 snowflakeBuilder.addComponentBuilder(CRender(snowflakeImage, 2, 0.5))
 
-snowflakeScript = XPython(assets.getAsset("snowflake_script").getAsset())
+snowflakeScript = assets.get("snowflake_script")
 snowflakeBuilder.addScript(snowflakeScript)
 
 lastSnowflake = 0

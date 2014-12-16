@@ -35,13 +35,13 @@ lastIcicle = 0
 icicleTimeout = 100
 icicleCount = 0
 
-icicleImage = assets.getAsset("icicle").getAsset()
+icicleImage = assets.get("icicle")
 iPhysics = IciclePhysics()
 icicleBuilder = EntityBuilder()
 icicleBuilder.addComponentBuilder(CRender(icicleImage, 1, 1))
 icicleBuilder.addComponentBuilder(iPhysics)
 
-icicleScript = XPython(assets.getAsset("icicle_script").getAsset())
+icicleScript = assets.get("icicle_script")
 icicleBuilder.addScript(icicleScript)
 
 def handleJump(time) :
