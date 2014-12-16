@@ -7,6 +7,7 @@ import commons.Resource;
 import commons.ResourceLocator.ClasspathResourceLocator;
 import commons.Transform2f;
 import commons.matrix.Vector2f;
+import commons.matrix.Vector3f;
 
 import engine.core.ComponentBuilder;
 import engine.core.Entity;
@@ -44,9 +45,9 @@ public class Platformer {
 		Scene scene = new Scene(game);
 		game.scenes().addScene(scene, "main");
 
-		EntityBuilder lightBuilder = new EntityBuilder();
-		lightBuilder.addComponentBuilder(new CLight(LightFactory.createAmbient(new Color(0.7f, 0.7f, 1f))));
-		scene.createEntity("light", scene, lightBuilder);
+		/*EntityBuilder lightBuilder = new EntityBuilder();
+		lightBuilder.addComponentBuilder(new CLight(LightFactory.createAmbient(new Color(0.1f, 0.1f, 0.1f))));
+		scene.createEntity("light", scene, lightBuilder);*/
 
 		makeBackground(scene);
 		makePlatforms(scene);
@@ -164,6 +165,11 @@ public class Platformer {
 		playerBuilder.addScript(moveScript);
 		Entity player = scene.createEntity("player", scene, playerBuilder);
 		player.getCTransform().setTransform(new Transform2f(new Vector2f(0f, 2f), 0f, playerScale));
+
+		EntityBuilder lightBuilder = new EntityBuilder();
+		lightBuilder.addComponentBuilder(new CLight(LightFactory.createDiffusePoint(new Vector3f(0f, 0f, 0f),
+				new Vector3f(0.5f, 0.5f, 4f), new Color(1f, 1f, 1f))));
+		scene.createEntity("playerLight", player, lightBuilder);
 		return player;
 	}
 
