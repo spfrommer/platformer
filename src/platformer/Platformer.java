@@ -45,9 +45,9 @@ public class Platformer {
 		Scene scene = new Scene(game);
 		game.scenes().addScene(scene, "main");
 
-		/*EntityBuilder lightBuilder = new EntityBuilder();
+		EntityBuilder lightBuilder = new EntityBuilder();
 		lightBuilder.addComponentBuilder(new CLight(LightFactory.createAmbient(new Color(0.1f, 0.1f, 0.1f))));
-		scene.createEntity("light", scene, lightBuilder);*/
+		scene.createEntity("light", scene, lightBuilder);
 
 		makeBackground(scene);
 		makePlatforms(scene);
@@ -136,6 +136,10 @@ public class Platformer {
 		makePlatform(scene, p1Builder, 0, new Vector2f(0f, 0f), new Vector2f(1f, 2f));
 		makePlatform(scene, p1Builder, 1, new Vector2f(1.2f, 0f), new Vector2f(1f, 2f));
 		makePlatform(scene, p1Builder, 2, new Vector2f(3f, 1.5f), new Vector2f(1f, 2f));
+		makePlatform(scene, p1Builder, 3, new Vector2f(1f, 5f), new Vector2f(1f, 2f));
+		makePlatform(scene, p1Builder, 4, new Vector2f(6f, 1.5f), new Vector2f(1f, 2f));
+		makePlatform(scene, p1Builder, 5, new Vector2f(-3f, -1.5f), new Vector2f(1f, 2f));
+		makePlatform(scene, p1Builder, 6, new Vector2f(-1.5f, 3f), new Vector2f(1f, 2f));
 	}
 
 	private void makeSpawner(Scene scene) {

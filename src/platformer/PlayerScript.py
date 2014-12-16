@@ -62,8 +62,8 @@ def handleIcicle(time) :
 			translation = transform.getTransform().getTranslation()
 			mouseVector = Vector2f(mouse.getWorldX() - translation.getX(), mouse.getWorldY() - translation.getY())
 			iPhysics.setAngle(mouseVector.angle())
+			icicleBuilder.setTransform(Transform2f(translation.add(mouseVector.setLength(1)).toVector2f(), mouseVector.angle(), Vector2f(icicleWidth, icicleHeight)))
 			icicle = scene.createEntity("icicle" + str(icicleCount), scene, icicleBuilder)
-			icicle.getCTransform().setTransform(Transform2f(translation.add(mouseVector.setLength(1)).toVector2f(), mouseVector.angle(), Vector2f(icicleWidth, icicleHeight)))
 			lastIcicle = 0
 			icicleCount += 1
 			body.applyForce(mouseVector.setLength(-5))
