@@ -13,18 +13,23 @@ snowflakeScript = assets.get("snowflake_script")
 snowflakeBuilder.addScript(snowflakeScript)
 
 lastSnowflake = 0
-snowflakeTimeout = 400
+snowflakeTimeout = 100
 snowflakeCount = 0
 spawnHeight = 5
-spawnWidth = 3
+spawnWidth = 20
+
 
 def update(time) :
     global lastSnowflake
     global snowflakeCount
     lastSnowflake += time
     gameMouse = mouse.getMouse()
+    
+    camera = scene.find("player.camera")
+    trans = scene.getWorldTransform(camera).getTranslation()
+    
     if lastSnowflake >= snowflakeTimeout :
         snowflake = scene.createEntity("snowflake" + str(snowflakeCount), scene, snowflakeBuilder)
-        snowflake.getCTransform().setTransform(Transform2f(Vector2f(random.uniform(-spawnWidth, spawnWidth), spawnHeight), 0, Vector2f(0.25, 0.25)))
+        snowflake.getCTransform().setTransform(Transform2f(Vector2f(trans.getX() + random.uniform(-spawnWidth, spawnWidth), trans.getY() + spawnHeight), 0, Vector2f(0.25, 0.25)))
         lastSnowflake = 0
         snowflakeCount += 1
