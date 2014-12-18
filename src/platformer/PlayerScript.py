@@ -1,72 +1,93 @@
-from engine.core import CTransform
+from commons import Transform2f
+from commons.matrix import Vector2f
+
+from engine.core import CTransform, TagList
 from engine.core import EntityBuilder
 from engine.core import ComponentBuilder
-from engine.imp.physics.dyn4j import CBody
-from commons import Transform2f
-from engine.imp.render import CRender
-from commons.matrix import Vector2f
-from gltools.input.Mouse import MouseButton
+from engine.core import Entity
+from engine.core import CTags
+from engine.core import TagList
 from engine.core.script import XPython
+from engine.imp.physics.dyn4j import CollisionFilter
+from engine.imp.physics.dyn4j import CBody
+from engine.imp.render import CRender
+
+from gltools.input.Mouse import MouseButton
+
 from org.dyn4j.geometry import Rectangle
 from org.dyn4j.geometry.Mass import Type
+from org.dyn4j.dynamics.contact import ContactConstraint
 
-icicleWidth = 0.2
-icicleHeight = 0.5
+icicle_width = 0.2
+icicle_height = 0.5
+
+class IcicleCollision(CollisionFilter):
+	def canCollide(self, entity1, entity2):
+		ctags = entity2.getCTags()
+		if (ctags.getTags().hasTag("icicle")):
+			return False
+		return True
+	
+	def continueCollision(self, entity1, entity2, contact):
+		return True
 
 class IciclePhysics(ComponentBuilder):
-	m_angle = 0
+	angle = 0
 	
 	def setAngle(self, angle):
-		self.m_angle = angle
+		self.angle = angle
 		
 	def build(self):
 		physics = CBody();
-		physics.setShape(Rectangle(icicleWidth, icicleHeight))
-		physics.setVelocity(Vector2f(self.m_angle).setLength(5))
+		physics.setShape(Rectangle(icicle_width, icicle_height))
+		physics.setVelocity(Vector2f(self.angle).setLength(5))
+		physics.setCollisionFilter(IcicleCollision())
 		return physics
 		
 	def getName(self):
 		return CBody.NAME
 
-lastJump = 0
-jumpTimeout = 1000
 
-lastIcicle = 0
-icicleTimeout = 100
-icicleCount = 0
+icicle_image = assets.get("icicle")
+iphysics = IciclePhysics()
+icicle_script = assets.get("icicle_script")
 
-icicleImage = assets.get("icicle")
-iPhysics = IciclePhysics()
-icicleBuilder = EntityBuilder()
-icicleBuilder.addComponentBuilder(CRender(icicleImage, 1, 1))
-icicleBuilder.addComponentBuilder(iPhysics)
+icicle_builder = EntityBuilder()
+icicle_builder.setTagList(TagList().newAdd("icicle"))
+icicle_builder.addComponentBuilder(CRender(icicle_image, 2, 1))
+icicle_builder.addComponentBuilder(iphysics)
+icicle_builder.addScript(icicle_script)
 
-icicleScript = assets.get("icicle_script")
-icicleBuilder.addScript(icicleScript)
+last_jump = 0
+jump_timeout = 1000
+
+last_icicle = 0
+icicle_timeout = 100
+icicle_count = 0
 
 def handleJump(time) :
-	global lastJump
-	lastJump += time
+	global last_jump
+	last_jump += time
 	if keyboard.isKeyPressed(keyboard.getKey("W")) :
-		if lastJump >= jumpTimeout and body.getVelocity().getY() < 0.01 :
+		if last_jump >= jump_timeout and body.getVelocity().getY() < 0.01 :
 			body.applyForce(Vector2f(0, 15))
-			lastJump = 0
+			last_jump = 0
 
 def handleIcicle(time) :
-	global lastIcicle
-	global icicleCount
-	lastIcicle += time
-	gameMouse = mouse.getMouse()
-	if gameMouse.isButtonDown(gameMouse.getButton(MouseButton.LEFT_BUTTON_NAME)) :
-		if lastIcicle >= icicleTimeout :
+	global last_icicle
+	global icicle_count
+	last_icicle += time
+	game_mouse = mouse.getMouse()
+	if game_mouse.isButtonDown(game_mouse.getButton(MouseButton.LEFT_BUTTON_NAME)) :
+		if last_icicle >= icicle_timeout :
 			translation = transform.getTransform().getTranslation()
-			mouseVector = Vector2f(mouse.getWorldX() - translation.getX(), mouse.getWorldY() - translation.getY())
-			iPhysics.setAngle(mouseVector.angle())
-			icicleBuilder.setTransform(Transform2f(translation.add(mouseVector.setLength(1)).toVector2f(), mouseVector.angle(), Vector2f(icicleWidth, icicleHeight)))
-			icicle = scene.createEntity("icicle" + str(icicleCount), scene, icicleBuilder)
-			lastIcicle = 0
-			icicleCount += 1
-			body.applyForce(mouseVector.setLength(-5))
+			mouse_vector = Vector2f(mouse.getWorldX() - translation.getX(), mouse.getWorldY() - translation.getY())
+			iphysics.setAngle(mouse_vector.angle())
+			icicle_builder.setTransform(Transform2f(translation.add(mouse_vector.setLength(0.8)).toVector2f(), mouse_vector.angle(), Vector2f(icicle_width, icicle_height)))
+			icicle = scene.createEntity("icicle" + str(icicle_count), scene, icicle_builder)
+			last_icicle = 0
+			icicle_count += 1
+			body.applyForce(mouse_vector.setLength(-5))
 
 def update(time):
 	handleJump(time)

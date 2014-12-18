@@ -46,12 +46,12 @@ public class Platformer {
 		game.scenes().addScene(scene, "main");
 
 		EntityBuilder lightBuilder = new EntityBuilder();
-		lightBuilder.addComponentBuilder(new CLight(LightFactory.createAmbient(new Color(0.1f, 0.1f, 0.1f))));
+		lightBuilder.addComponentBuilder(new CLight(LightFactory.createAmbient(new Color(0.4f, 0.4f, 0.4f))));
 		scene.createEntity("light", scene, lightBuilder);
 
 		makeBackground(scene);
 		makePlatforms(scene);
-		makeSpawner(scene);
+		makeSpawners(scene);
 		Entity player = makePlayer(scene);
 
 		EntityBuilder cameraBuilder = new EntityBuilder();
@@ -90,10 +90,13 @@ public class Platformer {
 		ClasspathResourceLocator locator = new ClasspathResourceLocator();
 		Resource playerScript = new Resource(locator, "platformer/PlayerScript.py");
 		Resource snowflakeScript = new Resource(locator, "platformer/SnowflakeScript.py");
-		Resource spawnScript = new Resource(locator, "platformer/SpawnScript.py");
+		Resource enemyScript = new Resource(locator, "platformer/EnemyScript.py");
+		Resource enemySpawnScript = new Resource(locator, "platformer/EnemySpawner.py");
+		Resource snowflakeSpawnScript = new Resource(locator, "platformer/SnowflakeSpawner.py");
 		Resource icicleScript = new Resource(locator, "platformer/IcicleScript.py");
 		Resource walkScript = new Resource(locator, "platformer/walk.bsh");
 		Resource background = new Resource(locator, "platformer/background.png");
+		Resource target = new Resource(locator, "platformer/target.png");
 		Resource snowman = new Resource(locator, "platformer/snowman.png");
 		Resource icicle = new Resource(locator, "platformer/cave_icicle_1_0.png");
 		Resource lake = new Resource(locator, "platformer/cave_lake_1_0.png");
@@ -103,10 +106,13 @@ public class Platformer {
 
 		manager.load("player_script", playerScript, XPython.class);
 		manager.load("snowflake_script", snowflakeScript, XPython.class);
-		manager.load("spawn_script", spawnScript, XPython.class);
+		manager.load("enemy_script", enemyScript, XPython.class);
+		manager.load("enemy_spawn_script", enemySpawnScript, XPython.class);
+		manager.load("snowflake_spawn_script", snowflakeSpawnScript, XPython.class);
 		manager.load("icicle_script", icicleScript, XPython.class);
 		manager.load("walk_script", walkScript, XJava.class);
 		manager.load("background", background, Material2D.class);
+		manager.load("target", target, Material2D.class);
 		manager.load("snowman", snowman, Material2D.class);
 		manager.load("icicle", icicle, Material2D.class);
 		manager.load("lake", lake, Material2D.class);
@@ -131,7 +137,7 @@ public class Platformer {
 
 		Vector2f p1Scale = new Vector2f(1f, 2f);
 		EntityBuilder p1Builder = new EntityBuilder();
-		p1Builder.addComponentBuilder(new CRender(platform1, 1, 1f));
+		p1Builder.addComponentBuilder(new CRender(platform1, 2, 1f));
 		p1Builder.addComponentBuilder(new GroundPhysicsBuilder(p1Scale));
 		makePlatform(scene, p1Builder, 0, new Vector2f(0f, 0f), new Vector2f(1f, 2f));
 		makePlatform(scene, p1Builder, 1, new Vector2f(1.2f, 0f), new Vector2f(1f, 2f));
@@ -142,12 +148,16 @@ public class Platformer {
 		makePlatform(scene, p1Builder, 6, new Vector2f(-1.5f, 3f), new Vector2f(1f, 2f));
 	}
 
-	private void makeSpawner(Scene scene) {
+	private void makeSpawners(Scene scene) {
 		AssetManager assets = AssetManager.instance();
-		XScript script = assets.get("spawn_script", XPython.class);
+		XScript snowflake = assets.get("snowflake_spawn_script", XPython.class);
+		XScript enemy = assets.get("enemy_spawn_script", XPython.class);
 
-		Entity spawner = scene.createEntity("snowflakespawner", scene);
-		spawner.scripts().add(script.duplicate());
+		Entity snowflakeSpawner = scene.createEntity("snowflake_spawner", scene);
+		snowflakeSpawner.scripts().add(snowflake.duplicate());
+
+		Entity enemySpawner = scene.createEntity("enemy_spawner", scene);
+		enemySpawner.scripts().add(enemy.duplicate());
 	}
 
 	private void makePlatform(Scene scene, EntityBuilder builder, int num, Vector2f position, Vector2f scale) {
@@ -163,7 +173,7 @@ public class Platformer {
 
 		Vector2f playerScale = new Vector2f(0.5f, 1f);
 		EntityBuilder playerBuilder = new EntityBuilder();
-		playerBuilder.addComponentBuilder(new CRender(snowman, 1, 1f));
+		playerBuilder.addComponentBuilder(new CRender(snowman, 2, 1f));
 		playerBuilder.addComponentBuilder(new PlayerPhysicsBuilder(playerScale));
 		playerBuilder.addScript(playerScript);
 		playerBuilder.addScript(moveScript);
