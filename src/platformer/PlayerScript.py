@@ -40,7 +40,7 @@ class IciclePhysics(ComponentBuilder):
 	def build(self):
 		physics = CBody();
 		physics.setShape(Rectangle(icicle_width, icicle_height))
-		physics.setVelocity(Vector2f(self.angle).setLength(5))
+		physics.setVelocity(Vector2f(self.angle).setLength(10))
 		physics.setCollisionFilter(IcicleCollision())
 		return physics
 		
@@ -87,7 +87,7 @@ def handleIcicle(time) :
 			icicle = scene.createEntity("icicle" + str(icicle_count), scene, icicle_builder)
 			last_icicle = 0
 			icicle_count += 1
-			body.applyForce(mouse_vector.setLength(-5))
+			body.applyForce(mouse_vector.setLength(-2))
 
 def update(time):
 	handleJump(time)

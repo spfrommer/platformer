@@ -49,14 +49,14 @@ public class Platformer {
 		lightBuilder.addComponentBuilder(new CLight(LightFactory.createAmbient(new Color(0.4f, 0.4f, 0.4f))));
 		scene.createEntity("light", scene, lightBuilder);
 
-		makeBackground(scene);
-		makePlatforms(scene);
-		makeSpawners(scene);
 		Entity player = makePlayer(scene);
-
 		EntityBuilder cameraBuilder = new EntityBuilder();
 		cameraBuilder.addComponentBuilder(new CCamera(1f, true));
 		scene.createEntity("camera", player, cameraBuilder);
+
+		makeBackground(scene);
+		makePlatforms(scene);
+		makeSpawners(scene);
 
 		game.start();
 
