@@ -88,37 +88,7 @@ public class Platformer {
 		AssetManager manager = AssetManager.instance();
 
 		ClasspathResourceLocator locator = new ClasspathResourceLocator();
-		Resource playerScript = new Resource(locator, "platformer/PlayerScript.py");
-		Resource snowflakeScript = new Resource(locator, "platformer/SnowflakeScript.py");
-		Resource enemyScript = new Resource(locator, "platformer/EnemyScript.py");
-		Resource enemySpawnScript = new Resource(locator, "platformer/EnemySpawner.py");
-		Resource snowflakeSpawnScript = new Resource(locator, "platformer/SnowflakeSpawner.py");
-		Resource icicleScript = new Resource(locator, "platformer/IcicleScript.py");
-		Resource walkScript = new Resource(locator, "platformer/walk.bsh");
-		Resource background = new Resource(locator, "platformer/background.png");
-		Resource target = new Resource(locator, "platformer/target.png");
-		Resource snowman = new Resource(locator, "platformer/snowman.png");
-		Resource icicle = new Resource(locator, "platformer/cave_icicle_1_0.png");
-		Resource lake = new Resource(locator, "platformer/cave_lake_1_0.png");
-		Resource platform1 = new Resource(locator, "platformer/cave_platform_1_0.png");
-		Resource platform4 = new Resource(locator, "platformer/cave_platform_4_0.png");
-		Resource snowflake = new Resource(locator, "platformer/snowflake.png");
-
-		manager.load("player_script", playerScript, XPython.class);
-		manager.load("snowflake_script", snowflakeScript, XPython.class);
-		manager.load("enemy_script", enemyScript, XPython.class);
-		manager.load("enemy_spawn_script", enemySpawnScript, XPython.class);
-		manager.load("snowflake_spawn_script", snowflakeSpawnScript, XPython.class);
-		manager.load("icicle_script", icicleScript, XPython.class);
-		manager.load("walk_script", walkScript, XJava.class);
-		manager.load("background", background, Material2D.class);
-		manager.load("target", target, Material2D.class);
-		manager.load("snowman", snowman, Material2D.class);
-		manager.load("icicle", icicle, Material2D.class);
-		manager.load("lake", lake, Material2D.class);
-		manager.load("platform1", platform1, Material2D.class);
-		manager.load("platform4", platform4, Material2D.class);
-		manager.load("snowflake", snowflake, Material2D.class);
+		manager.loadFromFile(new Resource(locator, "platformer/assets.ast"));
 	}
 
 	private void makeBackground(Scene scene) {

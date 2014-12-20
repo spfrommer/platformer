@@ -1,0 +1,20 @@
+<assets>
+	<classpath>
+		<xpython 	name="player_script" 			path="platformer/PlayerScript.py"/>
+		<xpython 	name="snowflake_spawn_script" 	path="platformer/SnowflakeSpawner.py"/>
+		<xpython	name="snowflake_script" 		path="platformer/SnowflakeScript.py"/>
+		<xpython 	name="enemy_script" 			path="platformer/EnemyScript.py"/>
+		<xpython 	name="enemy_spawn_script" 		path="platformer/EnemySpawner.py"/>
+		<xpython 	name="icicle_script" 			path="platformer/IcicleScript.py"/>
+		<xjava 		name="walk_script" 				path="platformer/walk.bsh"/>
+		
+		<material 	name="icicle" 					texture="platformer/icicle.png" 		lighted="true"/>
+		<material 	name="background" 				texture="platformer/background.png" 	lighted="true"/>
+		<material 	name="target" 					texture="platformer/target.png" 		lighted="true"/>
+		<material 	name="lake" 					texture="platformer/lake.png" 			lighted="true"/>
+		<material 	name="platform1" 				texture="platformer/platform1.png" 		lighted="true"/>
+		<material 	name="platform2" 				texture="platformer/platform2.png" 		lighted="true"/>
+		<material 	name="snowman" 					texture="platformer/snowman.png" 		lighted="true"/>
+		<material 	name="snowflake" 				texture="platformer/snowflake.png" 		lighted="true"/>
+	</classpath>  
+</assets>
