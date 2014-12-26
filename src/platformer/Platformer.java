@@ -17,6 +17,11 @@ import engine.core.asset.AssetManager;
 import engine.core.script.XJava;
 import engine.core.script.XPython;
 import engine.core.script.XScript;
+import engine.imp.format.XMLFormat;
+import engine.imp.format.XMLFormat.XMLScriptDecoder;
+import engine.imp.format.XMLFormat.XMLScriptEncoder;
+import engine.imp.format.XMLFormat.XMLTransformDecoder;
+import engine.imp.format.XMLFormat.XMLTransformEncoder;
 import engine.imp.physics.dyn4j.BodySystem;
 import engine.imp.physics.dyn4j.CBody;
 import engine.imp.physics.dyn4j.JointSystem;
@@ -31,6 +36,8 @@ import engine.imp.render.RenderingSystem;
 import glcommon.Color;
 
 public class Platformer {
+	private XMLFormat m_format = new XMLFormat();
+	
 	public Platformer() {
 
 	}
@@ -41,6 +48,12 @@ public class Platformer {
 		addSystems(game);
 		initResources();
 
+		m_format.addMetaDecoder(new XMLScriptDecoder());
+		m_format.addMetaEncoder(new XMLScriptEncoder());
+		
+		m_format.addDecoder(new XMLTransformDecoder());
+		m_format.addEncoder(new XMLTransformEncoder());
+		
 		Scene scene = new Scene(game);
 		game.scenes().addScene(scene, "main");
 
@@ -163,6 +176,9 @@ public class Platformer {
 		Entity player = scene.createEntity("player", scene, playerBuilder);
 		player.getCTransform().setTransform(new Transform2f(new Vector2f(0f, 2f), 0f, playerScale));
 
+		String encoded = m_format.encode(player);
+		System.out.println(encoded);
+		
 		EntityBuilder lightBuilder = new EntityBuilder();
 		lightBuilder.addComponentBuilder(new CLight(LightFactory.createDiffusePoint(new Vector3f(0f, 0f, 0f), new Vector3f(0.5f,
 				0.5f, 4f), new Color(0f, 0f, 1f))));
