@@ -69,7 +69,7 @@ def handleJump(time) :
 	global last_jump
 	last_jump += time
 	if keyboard.isKeyPressed(keyboard.getKey("W")) :
-		if last_jump >= jump_timeout and body.getVelocity().getY() < 0.01 :
+		if last_jump >= jump_timeout and abs(body.getVelocity().getY()) < 0.00001 :
 			body.applyForce(Vector2f(0, 15))
 			last_jump = 0
 

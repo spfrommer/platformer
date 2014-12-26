@@ -9,7 +9,6 @@ import commons.Transform2f;
 import commons.matrix.Vector2f;
 import commons.matrix.Vector3f;
 
-import engine.core.ComponentBuilder;
 import engine.core.Entity;
 import engine.core.EntityBuilder;
 import engine.core.Game;
@@ -46,7 +45,7 @@ public class Platformer {
 		game.scenes().addScene(scene, "main");
 
 		EntityBuilder lightBuilder = new EntityBuilder();
-		lightBuilder.addComponentBuilder(new CLight(LightFactory.createAmbient(new Color(0.4f, 0.4f, 0.4f))));
+		lightBuilder.addComponentBuilder(new CLight(LightFactory.createAmbient(new Color(0.8f, 0.8f, 0.8f))));
 		scene.createEntity("light", scene, lightBuilder);
 
 		Entity player = makePlayer(scene);
@@ -108,14 +107,20 @@ public class Platformer {
 		Vector2f p1Scale = new Vector2f(1f, 2f);
 		EntityBuilder p1Builder = new EntityBuilder();
 		p1Builder.addComponentBuilder(new CRender(platform1, 2, 1f));
-		p1Builder.addComponentBuilder(new GroundPhysicsBuilder(p1Scale));
+		CBody physics = new CBody();
+		physics.setShape(new Rectangle(p1Scale.getX(), p1Scale.getY()));
+		physics.setCollisionFriction(0.001f);
+		physics.setGravityScale(0);
+		physics.setMassType(Type.INFINITE);
+		p1Builder.addComponentBuilder(physics);
+
 		makePlatform(scene, p1Builder, 0, new Vector2f(0f, 0f), new Vector2f(1f, 2f));
 		makePlatform(scene, p1Builder, 1, new Vector2f(1.2f, 0f), new Vector2f(1f, 2f));
 		makePlatform(scene, p1Builder, 2, new Vector2f(3f, 1.5f), new Vector2f(1f, 2f));
 		makePlatform(scene, p1Builder, 3, new Vector2f(1f, 5f), new Vector2f(1f, 2f));
 		makePlatform(scene, p1Builder, 4, new Vector2f(6f, 1.5f), new Vector2f(1f, 2f));
 		makePlatform(scene, p1Builder, 5, new Vector2f(-3f, -1.5f), new Vector2f(1f, 2f));
-		makePlatform(scene, p1Builder, 6, new Vector2f(-1.5f, 3f), new Vector2f(1f, 2f));
+		makePlatform(scene, p1Builder, 6, new Vector2f(-1.5f, 3.5f), new Vector2f(1f, 2f));
 	}
 
 	private void makeSpawners(Scene scene) {
@@ -142,69 +147,30 @@ public class Platformer {
 		XScript moveScript = assets.get("walk_script", XJava.class);
 
 		Vector2f playerScale = new Vector2f(0.5f, 1f);
+
+		CBody physics = new CBody();
+		physics.setShape(new Rectangle(playerScale.getX(), playerScale.getY()));
+		physics.setGravityScale(1);
+		physics.setMassType(Type.FIXED_ANGULAR_VELOCITY);
+		physics.setDensity(5);
+		physics.setCollisionFriction(10);
+
 		EntityBuilder playerBuilder = new EntityBuilder();
 		playerBuilder.addComponentBuilder(new CRender(snowman, 2, 1f));
-		playerBuilder.addComponentBuilder(new PlayerPhysicsBuilder(playerScale));
+		playerBuilder.addComponentBuilder(physics);
 		playerBuilder.addScript(playerScript);
 		playerBuilder.addScript(moveScript);
 		Entity player = scene.createEntity("player", scene, playerBuilder);
 		player.getCTransform().setTransform(new Transform2f(new Vector2f(0f, 2f), 0f, playerScale));
 
 		EntityBuilder lightBuilder = new EntityBuilder();
-		lightBuilder.addComponentBuilder(new CLight(LightFactory.createDiffusePoint(new Vector3f(0f, 0f, 0f),
-				new Vector3f(0.5f, 0.5f, 4f), new Color(1f, 1f, 1f))));
+		lightBuilder.addComponentBuilder(new CLight(LightFactory.createDiffusePoint(new Vector3f(0f, 0f, 0f), new Vector3f(0.5f,
+				0.5f, 4f), new Color(0f, 0f, 1f))));
 		scene.createEntity("playerLight", player, lightBuilder);
 		return player;
 	}
 
 	public static void main(String[] args) {
 		new Platformer().start();
-	}
-
-	private class GroundPhysicsBuilder implements ComponentBuilder<CBody> {
-		private Vector2f m_scale;
-
-		public GroundPhysicsBuilder(Vector2f scale) {
-			m_scale = scale;
-		}
-
-		@Override
-		public CBody build() {
-			CBody physics = new CBody();
-			physics.setShape(new Rectangle(m_scale.getX(), m_scale.getY()));
-			physics.setCollisionFriction(0.001f);
-			physics.setGravityScale(0);
-			physics.setMassType(Type.INFINITE);
-			return physics;
-		}
-
-		@Override
-		public String getName() {
-			return CBody.NAME;
-		}
-	}
-
-	private class PlayerPhysicsBuilder implements ComponentBuilder<CBody> {
-		private Vector2f m_scale;
-
-		public PlayerPhysicsBuilder(Vector2f scale) {
-			m_scale = scale;
-		}
-
-		@Override
-		public CBody build() {
-			CBody physics = new CBody();
-			physics.setShape(new Rectangle(m_scale.getX(), m_scale.getY()));
-			physics.setGravityScale(1);
-			physics.setMassType(Type.FIXED_ANGULAR_VELOCITY);
-			physics.setDensity(5);
-			physics.setCollisionFriction(10);
-			return physics;
-		}
-
-		@Override
-		public String getName() {
-			return CBody.NAME;
-		}
 	}
 }
