@@ -92,3 +92,7 @@ def handleIcicle(time) :
 def update(time):
 	handleJump(time)
 	handleIcicle(time)
+	if (keyboard.isKeyPressed(keyboard.getKey("L"))) :
+		game.scenes().setCurrentScene("level2")
+	if (keyboard.isKeyPressed(keyboard.getKey("M"))) :
+		game.scenes().setCurrentScene("main")
