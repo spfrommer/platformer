@@ -38,7 +38,7 @@ def update(time) :
     game_mouse = mouse.getMouse()
     if last_enemy >= enemy_timeout :
         snowflake = scene.createEntity("enemy" + str(enemy_count), scene, enemy_builder)
-        snowflake.getCTransform().setTransform(Transform2f(Vector2f(random.uniform(-spawn_width, spawn_width), random.uniform(-spawn_height, spawn_height) + 2),
+        snowflake.transform().setTransform(Transform2f(Vector2f(random.uniform(-spawn_width, spawn_width), random.uniform(-spawn_height, spawn_height) + 2),
                                                             0, Vector2f(enemy_width, enemy_height)))
         last_enemy = 0
         enemy_count += 1

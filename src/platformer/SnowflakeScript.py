@@ -12,7 +12,7 @@ def update(time):
 	
 	transform.translate(transx * time, -0.0005 * time)
 	transform.rotate(rotation)
-	if transform.getTransform().getTranslation().getY() <= 0 :
+	if transform.getTranslation().getY() <= 0 :
 		scene.destroyEntity(entity);
 	
 	last_dir_change += time

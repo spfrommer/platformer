@@ -3,11 +3,10 @@
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/phagex"/>
-	<classpathentry kind="lib" path="lib/gltools/gltools-0.1.1a.jar"/>
-	<classpathentry kind="lib" path="lib/gltools/gltools-lwjgl-0.1.1a.jar"/>
-	<classpathentry kind="lib" path="lib/physics/dyn4j-v3.1.8.jar"/>
-	<classpathentry kind="lib" path="lib/scripting/js-14.jar"/>
-	<classpathentry kind="lib" path="lib/scripting/js.jar"/>
-	<classpathentry kind="lib" path="lib/scripting/jython-standalone-2.7-b1.jar"/>
+	<classpathentry kind="lib" path="/phagex/lib/gltools/gltools-0.1.1a.jar"/>
+	<classpathentry kind="lib" path="/phagex/lib/scripting/bsh-2.0b4.jar"/>
+	<classpathentry kind="lib" path="/phagex/lib/scripting/jython-standalone-2.7-b1.jar"/>
+	<classpathentry kind="lib" path="/phagex/lib/dyn4j-v3.1.8.jar"/>
+	<classpathentry kind="lib" path="/phagex/lib/jsoup-1.8.1.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

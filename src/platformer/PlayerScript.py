@@ -23,7 +23,7 @@ icicle_height = 0.5
 
 class IcicleCollision(CollisionFilter):
 	def canCollide(self, entity1, entity2):
-		ctags = entity2.getCTags()
+		ctags = entity2.tags()
 		if (ctags.getTags().hasTag("icicle")):
 			return False
 		return True
@@ -80,7 +80,7 @@ def handleIcicle(time) :
 	game_mouse = mouse.getMouse()
 	if game_mouse.isButtonDown(game_mouse.getButton(MouseButton.LEFT_BUTTON_NAME)) :
 		if last_icicle >= icicle_timeout :
-			translation = transform.getTransform().getTranslation()
+			translation = transform.getTranslation()
 			mouse_vector = Vector2f(mouse.getWorldX() - translation.getX(), mouse.getWorldY() - translation.getY())
 			iphysics.setAngle(mouse_vector.angle())
 			icicle_builder.setTransform(Transform2f(translation.add(mouse_vector.setLength(0.8)).toVector2f(), mouse_vector.angle(), Vector2f(icicle_width, icicle_height)))

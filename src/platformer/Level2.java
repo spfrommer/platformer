@@ -88,7 +88,7 @@ public class Level2 extends Scene {
 
 	private void makePlatform(EntityBuilder builder, int num, Vector2f position, Vector2f scale) {
 		Entity platform = this.createEntity("platform" + num, this, builder);
-		platform.getCTransform().setTransform(new Transform2f(position, 0f, scale));
+		platform.transform().setTransform(new Transform2f(position, 0f, scale));
 	}
 
 	private Entity makePlayer() {
@@ -112,7 +112,7 @@ public class Level2 extends Scene {
 		playerBuilder.addScript(playerScript);
 		playerBuilder.addScript(moveScript);
 		Entity player = this.createEntity("player", this, playerBuilder);
-		player.getCTransform().setTransform(new Transform2f(new Vector2f(0f, 4f), 0f, playerScale));
+		player.transform().setTransform(new Transform2f(new Vector2f(0f, 4f), 0f, playerScale));
 
 		EntityBuilder lightBuilder = new EntityBuilder();
 		lightBuilder.addComponentBuilder(new CLight(LightFactory.createDiffusePoint(new Vector3f(0f, 0f, 0f), new Vector3f(0.5f,

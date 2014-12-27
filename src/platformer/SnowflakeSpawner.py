@@ -32,7 +32,7 @@ def update(time) :
     game_mouse = mouse.getMouse()
     if last_snowflake >= snowflake_timeout :
         snowflake = scene.createEntity("snowflake" + str(snowflake_count), scene, snowflake_builder)
-        snowflake.getCTransform().setTransform(Transform2f(Vector2f(cam_trans.getX() + random.uniform(-spawn_width, spawn_width),
+        snowflake.transform().setTransform(Transform2f(Vector2f(cam_trans.getX() + random.uniform(-spawn_width, spawn_width),
                                                                      cam_trans.getY() + spawn_height), 0, Vector2f(0.25, 0.25)))
         last_snowflake = 0
         snowflake_count += 1

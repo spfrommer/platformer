@@ -12,9 +12,19 @@ import engine.core.EntityBuilder;
 import engine.core.Game;
 import engine.core.Scene;
 import engine.core.asset.AssetManager;
+import engine.core.format.EntityDef;
 import engine.core.script.XJava;
 import engine.core.script.XPython;
 import engine.core.script.XScript;
+import engine.imp.format.XMLFormat;
+import engine.imp.format.XMLFormat.XMLScriptDataDecoder;
+import engine.imp.format.XMLFormat.XMLScriptDataEncoder;
+import engine.imp.format.XMLFormat.XMLScriptDecoder;
+import engine.imp.format.XMLFormat.XMLScriptEncoder;
+import engine.imp.format.XMLFormat.XMLTagsDecoder;
+import engine.imp.format.XMLFormat.XMLTagsEncoder;
+import engine.imp.format.XMLFormat.XMLTransformDecoder;
+import engine.imp.format.XMLFormat.XMLTransformEncoder;
 import engine.imp.physics.dyn4j.CBody;
 import engine.imp.render.CCamera;
 import engine.imp.render.CLight;
@@ -27,8 +37,20 @@ import glcommon.Color;
  * The first level.
  */
 public class Level1 extends Scene {
+	private XMLFormat m_format = new XMLFormat();
+
 	public Level1(Game game) {
 		super(game);
+
+		m_format.addMetaDecoder(new XMLScriptDecoder());
+		m_format.addMetaEncoder(new XMLScriptEncoder());
+
+		m_format.addDecoder(new XMLTransformDecoder());
+		m_format.addEncoder(new XMLTransformEncoder());
+		m_format.addDecoder(new XMLTagsDecoder());
+		m_format.addEncoder(new XMLTagsEncoder());
+		m_format.addDecoder(new XMLScriptDataDecoder());
+		m_format.addEncoder(new XMLScriptDataEncoder());
 
 		EntityBuilder lightBuilder = new EntityBuilder();
 		lightBuilder.addComponentBuilder(new CLight(LightFactory.createAmbient(new Color(0.8f, 0.8f, 0.8f))));
@@ -91,7 +113,7 @@ public class Level1 extends Scene {
 
 	private void makePlatform(EntityBuilder builder, int num, Vector2f position, Vector2f scale) {
 		Entity platform = this.createEntity("platform" + num, this, builder);
-		platform.getCTransform().setTransform(new Transform2f(position, 0f, scale));
+		platform.transform().setTransform(new Transform2f(position, 0f, scale));
 	}
 
 	private Entity makePlayer() {
@@ -115,7 +137,12 @@ public class Level1 extends Scene {
 		playerBuilder.addScript(playerScript);
 		playerBuilder.addScript(moveScript);
 		Entity player = this.createEntity("player", this, playerBuilder);
-		player.getCTransform().setTransform(new Transform2f(new Vector2f(0f, 2f), 0f, playerScale));
+		player.transform().setTransform(new Transform2f(new Vector2f(0f, 2f), 0f, playerScale));
+
+		String xml = m_format.encode(new EntityDef(player));
+		System.out.println(xml);
+		EntityDef e = m_format.decode(xml);
+		System.out.println(m_format.encode(e));
 
 		EntityBuilder lightBuilder = new EntityBuilder();
 		lightBuilder.addComponentBuilder(new CLight(LightFactory.createDiffusePoint(new Vector3f(0f, 0f, 0f), new Vector3f(0.5f,
